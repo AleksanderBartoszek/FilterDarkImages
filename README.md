@@ -1,4 +1,6 @@
-# Filtering Dark Images
+# Filtering Dark Images - single thread
+
+[link to parallel version: (https://github.com/AleksanderBartoszek/ParallelDarkImages)]
 
 ### Method of evaluating how "dark" is the image
 
@@ -10,7 +12,7 @@ However I am not entirely satisfied with this algorithm as many images might end
 
 I've played around using contrast (difference in lightness of brightest and darkest pixel) but to no avail either. There were photos with no contrast but still easily distinguishable as well as the other way around.
 
-Next, I tried improving on initial method, not only calculating mean of lightness and brightness, but also median, to see the distribution of light and dark pixels.
+Next, I tried to improve on the initial method, not only calculating mean of lightness and brightness, but also median, to see the distribution of light and dark pixels.
 
 Mean could be influenced by black or white areas of the image, median on the other hand is pretty stable, but unable to see extremes when there's high contrast.
 
@@ -24,11 +26,28 @@ There is potential for improvement using more advanced statistical analysis of l
 
 ### How to use this app
 
+Application is set to run in sbt with command: 
+
+`run {args}`
+
+and takes 4 arguments:
+
+- path to folder with photos to process, without last '/' [String]
+- path to folder for storing evaluated photos, without last '/' [String]
+- threshold value for assessment [Int]
+- type of function used to calculate score [String] { "default", "linear", "dark" }
+
+example command, for processing photos included in folder input_photos:
+
+`run input_photos output_photos 60 default`
+
+currently incorrect user input os not handled
+
 ### Optimal Settings
 
 Sorted values genereated on photos provided with the task using different functions to calculate scores
 
-|        | linear | commonSteep | darkSteep |
+|        | linear |   default   |    dark   |
 |--------|:------:|:-----------:|:---------:|
 | BRIGHT |   20   |      1      |     36    |
 | BRIGHT |   23   |      1      |     38    |
@@ -59,17 +78,22 @@ Sorted values genereated on photos provided with the task using different functi
 |  DARK  |   99   |      99     |     98    |
 |  DARK  |   99   |      99     |     98    |
 
-I recommend using "commonSteep" function to achieve the biggest gap between accepted and discarded photos
+I recommend using "default" function to achieve the biggest gap between accepted and discarded photos
 
-|        | linear | commonSteep | darkSteep |
+|        | linear |   default   |    dark   |
 |--------|:------:|:-----------:|:---------:|
 | BRIGHT |   75   |      39     |     60    |
 |  DARK  |   89   |      85     |     72    |
 
 Threshold for accepting photos should remain in those borders
 
+Functions were chosen to match distribution of lightness in photos, they're separate entities, easily replaceable with more optimal functions
+
 ### Photos Included
 
-folder "input_photos" includes provided images and additional white and black png for testing purposes
+folder "input_photos" provides images for testing
 
 ### Possible Improvements
+
+- Needs testing
+- Needs incorrect user input handling
