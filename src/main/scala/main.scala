@@ -1,5 +1,12 @@
 import javax.imageio.ImageIO
 
+/** Entry point
+ *
+ * @param in path to folder with images to process
+ * @param out path where images should be saved
+ * @param threshold minimal score to discard image
+ * @param func type of function to evaluate how bright is the image
+ */
 @main
 def FilterDarkImages(in: String, out: String, threshold: Int, func: String): Unit = {
   val inputPath = in + "/"
